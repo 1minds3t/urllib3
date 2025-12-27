@@ -1,0 +1,18 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "urllib3-lts"
+version = "2024.37891"
+description = "LTS Security Dispatcher for urllib3"
+readme = "README.md"
+requires-python = ">=3.7"
+license = "MIT"
+dependencies = [
+    "urllib3-lts-py37==2024.37891 ; python_version >= '3.7' and python_version < '3.8'",
+    "urllib3>=2.2.2 ; python_version >= '3.8'" 
+]
+
+[project.urls]
+Homepage = "https://github.com/1minds3t/urllib3-lts"
