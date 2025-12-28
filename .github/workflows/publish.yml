@@ -27,10 +27,6 @@ jobs:
       - name: Install Builder
         run: pip install build
 
-      # --- BUILD STRATEGY ---
-      # We must build ALL 3 packages from this one workflow
-      # by switching branches dynamically.
-      
       - name: Build Main (Dispatcher)
         run: |
           git checkout main
@@ -51,7 +47,6 @@ jobs:
           mkdir -p dist-py38
           mv dist/* dist-py38/ 2>/dev/null
 
-      # --- CONSOLIDATE & SANITIZE ---
       - name: Prepare Artifacts
         run: |
           mkdir -p final_dist
@@ -59,10 +54,7 @@ jobs:
           cp dist-py37/* final_dist/ 2>/dev/null || true
           cp dist-py38/* final_dist/ 2>/dev/null || true
           
-          echo "📦 Artifacts ready for upload:"
-          ls -l final_dist/
-          
-          # Sanitize filenames (Replace - with _ in names)
+          # Sanitize filenames
           cd final_dist
           for f in *; do
             new_name=$(echo "$f" | sed -e 's/-/_/g' -e 's/_tar.gz/.tar.gz/' -e 's/_whl/.whl/')

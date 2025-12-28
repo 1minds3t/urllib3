@@ -6,13 +6,15 @@ This ecosystem backports critical security fixes to legacy Python environments (
 
 ## 🏆 Patch Status (v2025.66471)
 
-| Vulnerability | Severity | Impact | Status |
-|:---|:---|:---|:---|
-| **CVE-2025-66471** | 🔴 HIGH | Compression Bomb DoS | 🛡️ **FIXED** |
-| **CVE-2025-66418** | 🔴 HIGH | Unbounded Links DoS | 🛡️ **FIXED** |
-| **CVE-2025-50182** | 🟡 MOD | Node.js Redirect Bypass | 🛡️ **FIXED** |
-| **CVE-2025-50181** | 🟡 MOD | Redirect Retry Bypass | 🛡️ **FIXED** |
-| **CVE-2024-37891** | 🟡 MOD | Proxy-Auth Header Leak | 🛡️ **FIXED** |
+This release secures **941M+ downloads** against the following vulnerabilities:
+
+| Vulnerability | Severity | Impact | Py3.7 | Py3.8 |
+|:---|:---|:---|:---|:---|
+| **CVE-2025-66471** | 🔴 HIGH | Compression Bomb DoS | 🛡️ Fixed | 🛡️ Fixed |
+| **CVE-2025-66418** | 🔴 HIGH | Unbounded Links DoS | 🛡️ Fixed | 🛡️ Fixed |
+| **CVE-2025-50182** | 🟡 MOD | Node.js Redirect Bypass | N/A | 🛡️ Fixed |
+| **CVE-2025-50181** | 🟡 MOD | Redirect Retry Bypass | 🛡️ Fixed | 🛡️ Fixed |
+| **CVE-2024-37891** | 🟡 MOD | Proxy-Auth Header Leak | 🛡️ Fixed | N/A |
 
 ## 📦 Usage
 
@@ -25,13 +27,10 @@ pip install urllib3-lts
 ## 🌐 The OmniPKG Ecosystem
 Maintained by **1minds3t**.
 
-*   **[filelock-lts](https://pypi.org/project/filelock-lts/)**: Secure file locking for legacy Python.
-*   **[omnipkg](https://pypi.org/project/omnipkg/)**: The ultimate environment scanner.
-
-**Scan your whole environment for vulnerabilities:**
+**Manage your environment:**
 ```bash
 pip install omnipkg
-omnipkg scan --fix
+omnipkg reset -y
 ```
 
 ### 🚧 Coming Soon: omnipkg-runtime

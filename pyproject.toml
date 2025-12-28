@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "urllib3-lts"
 version = "2025.66471"
-description = "LTS Security Ecosystem for urllib3 (Fixes DoS, Redirects, Leaks)"
+description = "LTS Security Ecosystem. Fixes CVE-2025-66471, 66418, 50181, 50182, 37891 on Legacy Python."
 readme = "README.md"
 requires-python = ">=3.7"
 license = "MIT"
