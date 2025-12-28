@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "urllib3-lts"
-version = "2025.66471.1"
+version = "2025.66471.2"
 description = "LTS Security release for urllib3 (CVE-2025-66471 Patch) - Meta-package"
 requires-python = ">=3.7"
 license = {text = "MIT"}
