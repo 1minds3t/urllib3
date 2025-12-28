@@ -1,6 +1,6 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "urllib3-lts"
@@ -8,8 +8,12 @@ version = "2025.66471"
 description = "LTS Security Ecosystem. Fixes CVE-2025-66471, 66418, 50181, 50182, 37891 on Legacy Python."
 readme = "README.md"
 requires-python = ">=3.7"
-license = "MIT"
+license = {text = "MIT"}
 authors = [{name = "1minds3t", email = "1minds3t@proton.me"}]
+classifiers = [
+    "Topic :: Security",
+    "Intended Audience :: Developers"
+]
 dependencies = [
     "urllib3-lts-py37==2025.66471 ; python_version >= '3.7' and python_version < '3.8'",
     "urllib3-lts-py38==2025.66471 ; python_version >= '3.8' and python_version < '3.9'",
