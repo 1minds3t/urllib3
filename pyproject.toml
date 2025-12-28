@@ -15,7 +15,7 @@ classifiers = [
     "Intended Audience :: Developers"
 ]
 dependencies = [
-    "urllib3-lts-py37==2025.66471.1 ; python_version >= '3.7' and python_version < '3.8'",
+    "urllib3-lts-py37==2025.66471.2 ; python_version >= '3.7' and python_version < '3.8'",
     "urllib3-lts-py38==2025.66471.1 ; python_version >= '3.8' and python_version < '3.9'",
     "urllib3>=2.3.0 ; python_version >= '3.9'" 
 ]
