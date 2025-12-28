@@ -5,34 +5,16 @@ build-backend = "hatchling.build"
 [project]
 name = "urllib3-lts"
 version = "2025.66471"
-description = "LTS Security Backports for urllib3 - Fixes DoS, Redirects, Auth Leaks"
+description = "LTS Security Ecosystem for urllib3 (Fixes DoS, Redirects, Leaks)"
 readme = "README.md"
 requires-python = ">=3.7"
-license = {text = "MIT"}
-authors = [
-    {name = "urllib3-lts contributors"}
-]
-keywords = ["urllib3", "security", "backport", "lts", "python3.7", "python3.8"]
-classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Topic :: Security",
-]
-
+license = "MIT"
+authors = [{name = "1minds3t", email = "1minds3t@proton.me"}]
 dependencies = [
     "urllib3-lts-py37==2025.66471 ; python_version >= '3.7' and python_version < '3.8'",
     "urllib3-lts-py38==2025.66471 ; python_version >= '3.8' and python_version < '3.9'",
-    "urllib3>=2.3.0 ; python_version >= '3.9'"
+    "urllib3>=2.3.0 ; python_version >= '3.9'" 
 ]
 
 [project.urls]
 Homepage = "https://github.com/1minds3t/urllib3-lts"
-Repository = "https://github.com/1minds3t/urllib3-lts"
-Issues = "https://github.com/1minds3t/urllib3-lts/issues"

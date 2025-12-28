@@ -1,41 +1,38 @@
 # urllib3-lts 🛡️
-**Security Backports for Legacy Python.**
 
-## Latest Release: CVE-2025-66471 & CVE-2025-66418
-**Critical Decompression DoS Protection**
+**The Long-Term Support Security Release for urllib3.**
 
-| Vulnerability | Severity | Py3.7 | Py3.8 | Py3.9+ |
-|:---|:---|:---|:---|:---|
-| **CVE-2025-66471** (Compression Bomb) | 🔴 HIGH | 🛡️ Fixed | 🛡️ Fixed | ✅ Native |
-| **CVE-2025-66418** (Chain Limit) | 🔴 HIGH | 🛡️ Fixed | 🛡️ Fixed | ✅ Native |
-| **CVE-2025-50182** (Node.js Redirects) | 🟡 MOD | N/A | 🛡️ Fixed | ✅ Native |
-| **CVE-2025-50181** (Redirect Disable) | 🟡 MOD | 🛡️ Fixed | 🛡️ Fixed | ✅ Native |
-| **CVE-2024-37891** (Proxy-Auth Leak) | 🟡 MOD | 🛡️ Fixed | ✅ Native | ✅ Native |
+This ecosystem backports critical security fixes to legacy Python environments (3.7 & 3.8) that official maintainers have dropped.
 
-## Installation
+## 🏆 Patch Status (v2025.66471)
+
+| Vulnerability | Severity | Impact | Status |
+|:---|:---|:---|:---|
+| **CVE-2025-66471** | 🔴 HIGH | Compression Bomb DoS | 🛡️ **FIXED** |
+| **CVE-2025-66418** | 🔴 HIGH | Unbounded Links DoS | 🛡️ **FIXED** |
+| **CVE-2025-50182** | 🟡 MOD | Node.js Redirect Bypass | 🛡️ **FIXED** |
+| **CVE-2025-50181** | 🟡 MOD | Redirect Retry Bypass | 🛡️ **FIXED** |
+| **CVE-2024-37891** | 🟡 MOD | Proxy-Auth Header Leak | 🛡️ **FIXED** |
+
+## 📦 Usage
+
+**Standard Installation:**
 ```bash
 pip install urllib3-lts
 ```
+*This meta-package automatically detects your Python version and installs the correct secured backport.*
 
-Automatically installs the correct secured version for your Python runtime.
+## 🌐 The OmniPKG Ecosystem
+Maintained by **1minds3t**.
 
-## What's Fixed
+*   **[filelock-lts](https://pypi.org/project/filelock-lts/)**: Secure file locking for legacy Python.
+*   **[omnipkg](https://pypi.org/project/omnipkg/)**: The ultimate environment scanner.
 
-### CVE-2025-66471 (HIGH) - Compression Bomb DoS
-Attackers could send highly compressed data (1KB → 1GB) to exhaust memory. Fixed by:
-- Adding bounded decompression with `max_length` parameter
-- Limiting decompression per chunk to prevent memory exhaustion
-- Tracking unconsumed data properly
+**Scan your whole environment for vulnerabilities:**
+```bash
+pip install omnipkg
+omnipkg scan --fix
+```
 
-### CVE-2025-66418 (HIGH) - Unbounded Decompression Chain
-Attackers could chain unlimited encodings (`gzip,gzip,gzip,...`). Fixed by:
-- Limiting decompression chain to maximum 5 links
-- Raising `DecodeError` for excessive chaining
-
-### Market Impact
-- **Python 3.7**: 532M monthly downloads (9.23%)
-- **Python 3.8**: 409M monthly downloads (7.09%)
-- **Total**: 941M affected downloads secured
-
-## License
-MIT
+### 🚧 Coming Soon: omnipkg-runtime
+We are building a runtime enforcer that allows configurable **WARN** or **BLOCK** policies for unpatched vulnerabilities. Stay tuned.

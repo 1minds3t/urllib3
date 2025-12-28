@@ -1,0 +1,78 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Builder
+        run: pip install build
+
+      # --- BUILD STRATEGY ---
+      # We must build ALL 3 packages from this one workflow
+      # by switching branches dynamically.
+      
+      - name: Build Main (Dispatcher)
+        run: |
+          git checkout main
+          python -m build
+          mv dist dist-main
+
+      - name: Build Py3.7
+        run: |
+          git checkout py37
+          python -m build
+          mkdir -p dist-py37
+          mv dist/* dist-py37/ 2>/dev/null || mv dist-main/* dist-py37/ 
+
+      - name: Build Py3.8
+        run: |
+          git checkout py38
+          python -m build
+          mkdir -p dist-py38
+          mv dist/* dist-py38/ 2>/dev/null
+
+      # --- CONSOLIDATE & SANITIZE ---
+      - name: Prepare Artifacts
+        run: |
+          mkdir -p final_dist
+          cp dist-main/* final_dist/ 2>/dev/null || true
+          cp dist-py37/* final_dist/ 2>/dev/null || true
+          cp dist-py38/* final_dist/ 2>/dev/null || true
+          
+          echo "📦 Artifacts ready for upload:"
+          ls -l final_dist/
+          
+          # Sanitize filenames (Replace - with _ in names)
+          cd final_dist
+          for f in *; do
+            new_name=$(echo "$f" | sed -e 's/-/_/g' -e 's/_tar.gz/.tar.gz/' -e 's/_whl/.whl/')
+            if [ "$f" != "$new_name" ]; then
+              mv "$f" "$new_name"
+            fi
+          done
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages_dir: final_dist
+          skip-existing: true
