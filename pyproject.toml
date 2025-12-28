@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "urllib3-lts-py37"
-version = "2025.66471.1"
+version = "2025.66471.2"
 description = "Python 3.7 urllib3 with CVE-2025-66471 security patches"
 requires-python = ">=3.7, <3.8"
 license = {text = "MIT"}
