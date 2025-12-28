@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "urllib3-lts-py37"
 version = "2025.66471"
-description = "LTS Security Backport for urllib3 (Python 3.7)"
+description = "LTS Security Backport for Python 3.7. Fixes CVE-2025-66471, CVE-2025-66418, CVE-2025-50181, CVE-2024-37891."
 readme = "README.md"
 requires-python = ">=3.7, <3.8"
 license = "MIT"
