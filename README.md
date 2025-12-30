@@ -26,3 +26,14 @@ Maintained by **1minds3t**.
 pip install omnipkg
 omnipkg reset -y
 ```
+
+## ⚠️ Installation Warning
+
+**Uninstall urllib3 before installing this package:**
+
+```bash
+pip uninstall urllib3 -y
+pip install urllib3-lts-py38
+```
+
+This ensures the security patches are applied and not overwritten.
