@@ -57,6 +57,42 @@ jobs:
           python -m build
           echo "📦 Artifacts created:"
           ls -lh dist/
+      
+      - name: Add urllib3 provides metadata (py37/py38 only)
+        if: steps.python_info.outputs.branch != 'main'
+        run: |
+          # Extract the wheel
+          cd dist
+          WHEEL=$(ls *.whl)
+          unzip -q $WHEEL -d temp_wheel
+          
+          # Determine the version to fake
+          if [[ "${{ steps.python_info.outputs.branch }}" == "py37" ]]; then
+            FAKE_VERSION="2.0.7"
+          else
+            FAKE_VERSION="2.2.3"
+          fi
+          
+          # Create fake urllib3 dist-info
+          mkdir -p temp_wheel/urllib3-${FAKE_VERSION}.dist-info
+          
+          cat > temp_wheel/urllib3-${FAKE_VERSION}.dist-info/METADATA <<EOF
+          Metadata-Version: 2.1
+          Name: urllib3
+          Version: ${FAKE_VERSION}
+          Summary: Provided by urllib3-lts-${{ steps.python_info.outputs.branch }}
+          EOF
+          
+          echo "urllib3-lts-${{ steps.python_info.outputs.branch }}" > temp_wheel/urllib3-${FAKE_VERSION}.dist-info/INSTALLER
+          echo "urllib3" > temp_wheel/urllib3-${FAKE_VERSION}.dist-info/top_level.txt
+          
+          # Repack the wheel
+          cd temp_wheel
+          zip -qr ../$WHEEL *
+          cd ..
+          rm -rf temp_wheel
+          
+          echo "✅ Added urllib3 provides metadata to wheel"
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
