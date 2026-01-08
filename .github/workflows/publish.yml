@@ -1,92 +1,64 @@
 name: Publish to PyPI
 
 on:
-  push:
-    branches:
-      - "main"
-      - "lts-*"  # <--- ALLOWS YOUR LTS BRANCHES
-    tags:
-      - "*"
-  workflow_dispatch: # <--- ALLOWS YOU TO CLICK "RUN WORKFLOW" BUTTON
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      python_version:
+        description: 'Target to build'
+        required: true
+        type: choice
+        options:
+          - 'dispatcher'
+          - 'py37'
+          - 'py38'
 
 permissions:
-  contents: "read"
+  id-token: write
+  contents: read
 
 jobs:
-  build:
-    # REMOVED THE URLLIB3 OWNER CHECK HERE
-    name: "Build distribution 📦"
-    runs-on: "ubuntu-latest"
-    outputs:
-      hashes: ${{ steps.hash.outputs.hashes }}
-      artifact-id: ${{ steps.upload-artifact.outputs.artifact-id }}
-
+  build-and-publish:
+    runs-on: ubuntu-latest
+    environment: pypi
     steps:
-      - name: "Checkout repository"
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+      - name: Determine Python version and branch
+        id: python_info
+        run: |
+          BRANCH="main"
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            INPUT="${{ github.event.inputs.python_version }}"
+            if [ "$INPUT" == "dispatcher" ]; then BRANCH="main"; else BRANCH="$INPUT"; fi
+          else
+            TAG_NAME="${{ github.event.release.tag_name }}"
+            if [[ "$TAG_NAME" =~ -py37$ ]]; then BRANCH="py37";
+            elif [[ "$TAG_NAME" =~ -py38$ ]]; then BRANCH="py38";
+            else BRANCH="main"; fi
+          fi
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+
+      - name: Checkout correct branch
+        uses: actions/checkout@v4
         with:
+          ref: ${{ steps.python_info.outputs.branch }}
           fetch-depth: 0
-          persist-credentials: false
 
-      - name: "Setup Python"
-        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: '3.11'
 
-      - name: "Install dependencies"
-        run: python -m pip install build==0.8.0
+      - name: Install build tools
+        run: pip install --upgrade pip build setuptools wheel
 
-      - name: "Build dists"
+      - name: Build package
         run: |
-          SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct) \
           python -m build
+          echo "📦 Artifacts created:"
+          ls -lh dist/
 
-      - name: "Generate hashes"
-        id: hash
-        run: |
-          cd dist && echo "hashes=$(sha256sum * | base64 -w0)" >> $GITHUB_OUTPUT
-
-      - name: "Upload dists"
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
-        id: upload-artifact
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          name: "dist"
-          path: "dist/"
-          if-no-files-found: error
-          retention-days: 5
-
-  publish-to-pypi-and-github:
-    name: "Publish to PyPI"
-    # CRITICAL: THIS ONLY RUNS IF YOU PUSH A TAG (e.g. git push origin v2026.21441.0)
-    if: ${{ github.ref_type == 'tag' }}
-    needs: ["build"]
-    permissions:
-      contents: write
-      id-token: write
-    runs-on: "ubuntu-latest"
-    environment:
-      name: "publish"
-
-    steps:
-    - name: "Download dists"
-      uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
-      with:
-        artifact-ids: ${{ needs.build.outputs.artifact-id }}
-        path: "dist/"
-
-    - name: "Upload dists to a new GitHub Release Draft"
-      env:
-        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-      run: |
-        gh release create "$GITHUB_REF_NAME" \
-          --repo "$GITHUB_REPOSITORY" \
-          --draft \
-          --title "$GITHUB_REF_NAME" \
-          --notes "" \
-          --verify-tag
-        gh release upload "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY"
-
-    - name: "Publish dists to PyPI"
-      uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
-      with:
-        attestations: true
+          skip-existing: true
