@@ -4,8 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "urllib3-lts"
-version = "2025.66471.3"
-description = "LTS Security release for urllib3 (CVE-2025-66471 Patch) - Meta-package"
+# BUMPED VERSION: Using Year + CVE ID + Patch number
+version = "2026.21441.1" 
+description = "LTS Security release for urllib3 (CVE-2026-21441 Patch) - Meta-package"
 requires-python = ">=3.7"
 license = {text = "MIT"}
 readme = "README.md"
@@ -14,10 +15,15 @@ classifiers = [
     "Topic :: Security",
     "Intended Audience :: Developers"
 ]
+
 dependencies = [
-    "urllib3-lts-py37==2025.66471.3 ; python_version >= '3.7' and python_version < '3.8'",
-    "urllib3-lts-py38==2025.66471.2 ; python_version >= '3.8' and python_version < '3.9'",
-    "urllib3>=2.3.0 ; python_version >= '3.9'" 
+    # Legacy Pythons: Still pointing to your specific LTS builds (You must patch these next!)
+    "urllib3-lts-py37==2026.21441.1 ; python_version >= '3.7' and python_version < '3.8'",
+    "urllib3-lts-py38==2026.21441.1 ; python_version >= '3.8' and python_version < '3.9'",
+    
+    # Modern Python: HARD FORCE upstream patch
+    # CRITICAL CHANGE: >=2.3.0  -->  >=2.6.3
+    "urllib3>=2.6.3 ; python_version >= '3.9'" 
 ]
 
 [project.urls]
